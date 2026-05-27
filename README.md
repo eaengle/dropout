@@ -24,6 +24,10 @@ A word puzzle game where you don't fill in answers — you eliminate junk letter
 
 The name is a nod to **dropout** in machine learning — a regularization technique that randomly removes neurons during training to reduce noise. Here, you do the same thing to the grid.
 
+## Puzzle generation
+
+Puzzles are AI-generated on demand. Set a theme, word count, and difficulty, then hit **Generate**. Leave the theme blank and the game picks one at random from 100 built-in seed phrases — ranging from *coral reef* and *Norse mythology* to *film noir* and *medieval alchemy*.
+
 ## Tech stack
 
 - [React](https://react.dev/) + [Vite](https://vite.dev/)

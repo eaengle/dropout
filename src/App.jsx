@@ -1,6 +1,29 @@
 import { useState } from 'react';
 import GameBoard from './components/GameBoard';
 
+const SEED_PHRASES = [
+  'ocean life', 'outer space', 'kitchen tools', 'ancient Rome', 'jazz music',
+  'tropical birds', 'mountain climbing', 'fairy tales', 'computer science', 'wild west',
+  'medieval knights', 'sushi restaurant', 'art museum', 'stock market', 'architecture',
+  'Greek mythology', 'desert animals', 'board games', 'chemistry lab', 'ballet dance',
+  'pirate adventure', 'Japanese culture', 'astronomy', 'fashion design', 'forest creatures',
+  'pizza toppings', 'superhero powers', 'time travel', 'deep sea creatures', 'Renaissance art',
+  'coffee shop', 'winter sports', 'magic spells', 'Egyptian history', 'garden flowers',
+  'car racing', 'detective stories', 'Viking history', 'yoga poses', 'submarine voyage',
+  'ice cream flavors', 'secret agents', 'tropical fruits', 'jazz instruments', 'martial arts',
+  'weather phenomena', 'cave exploration', 'opera', 'space station', 'haunted house',
+  'aquarium life', 'gold rush', 'pottery making', 'volcano science', 'origami',
+  'safari animals', 'harvest festival', 'music theory', 'quantum physics', 'coral reef',
+  'night sky', 'autumn leaves', 'wine tasting', 'archaeology dig', 'storm chasing',
+  'chess pieces', 'circus performance', 'ancient Egypt', 'forest mushrooms', 'dragon lore',
+  'bioluminescence', 'medieval siege', 'butterfly garden', 'ancient ruins', 'river wildlife',
+  'chemistry elements', 'stage magic', 'cave paintings', 'deep jungle', 'Norse mythology',
+  'tide pools', 'ice sculpting', 'train travel', 'ghost stories', 'treasure hunting',
+  'rock climbing', 'street food', 'circus animals', 'Renaissance fair', 'film noir',
+  'tropical storm', 'sunken ships', 'stargazing', 'urban legends', 'medieval alchemy',
+  'olympic sports', 'jazz age', 'bakery items', 'cryptography', 'coral gardens',
+];
+
 const DIFFICULTY_LABELS = [
   { level: 1, label: 'Easy',    desc: 'Consonant-only junk' },
   { level: 2, label: 'Medium',  desc: 'Full alphabet junk' },
@@ -22,11 +45,12 @@ export default function App() {
     setLoading(true);
     setError(null);
     setPuzzle(null);
+    const resolvedTheme = theme.trim() || SEED_PHRASES[Math.floor(Math.random() * SEED_PHRASES.length)];
     try {
       const res = await fetch('/api/generate-puzzle', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ theme: theme.trim(), wordCount, difficulty }),
+        body: JSON.stringify({ theme: resolvedTheme, wordCount, difficulty }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Something went wrong');
