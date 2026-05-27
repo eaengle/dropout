@@ -1,12 +1,14 @@
 import { useState, useMemo } from 'react';
 import GridCell from './GridCell';
 import ClueList from './ClueList';
+import WinScreen from './WinScreen';
 import { buildGrid } from '../utils/buildGrid';
 
 export default function Grid({ puzzle }) {
   const { grid, wordCells, junkCells } = useMemo(() => buildGrid(puzzle), [puzzle]);
   const [removed, setRemoved] = useState(new Set());
   const [mistakes, setMistakes] = useState(0);
+  const [winDismissed, setWinDismissed] = useState(false);
 
   const difficulty = puzzle.difficulty ?? 2;
   const maxMistakes = 6 - difficulty;
@@ -39,7 +41,10 @@ export default function Grid({ puzzle }) {
   }, [removed, wordCells, junkCells, failed]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
+    <div className="relative flex flex-col lg:flex-row gap-8 items-start justify-center">
+      {solved && !winDismissed && (
+        <WinScreen onDismiss={() => setWinDismissed(true)} />
+      )}
       <div className="flex flex-col gap-1">
         <div className="flex gap-1 mb-2">
             {Array.from({ length: maxMistakes }).map((_, i) => (
@@ -81,15 +86,6 @@ export default function Grid({ puzzle }) {
           ))}
         </div>
 
-        {solved && (
-          <div className="mt-4 rounded-lg overflow-hidden relative">
-            <img src="/images/win-signal.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="relative z-10 py-6 px-4 text-center bg-black/40">
-              <p className="text-white font-bold text-lg tracking-widest font-mono">SIGNAL FOUND</p>
-              <p className="text-gray-300 text-xs font-mono mt-1">puzzle complete</p>
-            </div>
-          </div>
-        )}
         {failed && (
           <p className="mt-4 text-center text-red-400 font-semibold text-sm font-mono">
             Too many mistakes — puzzle failed.
