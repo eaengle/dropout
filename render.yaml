@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: dropout
+    runtime: node
+    buildCommand: npm ci && npm run build
+    startCommand: node server/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false

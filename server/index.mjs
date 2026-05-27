@@ -30,8 +30,7 @@ app.post('/api/generate-puzzle', async (req, res) => {
 app.use(express.static(DIST));
 app.get('/{*path}', (_req, res) => res.sendFile(join(DIST, 'index.html')));
 
-const PORT = process.env.API_PORT ?? 3001;
+const PORT = process.env.PORT ?? process.env.API_PORT ?? 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Dropout running at http://localhost:${PORT}`);
-  console.log(`On your network:    http://10.0.0.3:${PORT}`);
 });
