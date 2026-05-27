@@ -16,17 +16,14 @@ export default function Grid({ puzzle }) {
   const toggle = (r, c) => {
     if (failed) return;
     const key = `${r},${c}`;
-    const isWord = wordCells.has(key);
-    setRemoved(prev => {
-      const next = new Set(prev);
-      if (next.has(key)) {
-        next.delete(key);
-      } else {
-        next.add(key);
-        if (isWord) setMistakes(m => m + 1);
-      }
-      return next;
-    });
+    const next = new Set(removed);
+    if (next.has(key)) {
+      next.delete(key);
+    } else {
+      next.add(key);
+      if (wordCells.has(key)) setMistakes(m => m + 1);
+    }
+    setRemoved(next);
   };
 
   const solved = useMemo(() => {
@@ -49,42 +46,52 @@ export default function Grid({ puzzle }) {
               <div
                 key={i}
                 className={`w-3 h-3 rounded-full border-2 transition-colors ${
-                  i < mistakes ? 'bg-red-500 border-red-600' : 'bg-gray-100 border-gray-300'
+                  i < mistakes ? 'bg-red-500 border-red-600' : 'bg-gray-700 border-gray-600'
                 }`}
               />
             ))}
-            <span className="text-xs text-gray-400 ml-1 self-center">
+            <span className="text-xs text-gray-500 ml-1 self-center">
               {maxMistakes - mistakes} mistake{maxMistakes - mistakes !== 1 ? 's' : ''} left
             </span>
           </div>
 
-        {grid.map((row, r) => (
-          <div key={r} className="flex gap-1">
-            {row.map((cell, c) => {
-              const key = `${r},${c}`;
-              const isWordCell = wordCells.has(key);
-              const isRemoved = removed.has(key);
-              const isWrong = isRemoved && isWordCell;
-              return (
-                <GridCell
-                  key={c}
-                  letter={cell.letter}
-                  removed={isRemoved}
-                  wrong={isWrong}
-                  onClick={() => cell.letter !== null && toggle(r, c)}
-                />
-              );
-            })}
-          </div>
-        ))}
+        <div className="relative">
+          <div
+            className="absolute inset-0 pointer-events-none z-10 opacity-[0.07] rounded"
+            style={{ backgroundImage: 'url(/images/texture-grain.png)', backgroundSize: 'cover' }}
+          />
+          {grid.map((row, r) => (
+            <div key={r} className="flex gap-1 mb-1">
+              {row.map((cell, c) => {
+                const key = `${r},${c}`;
+                const isWordCell = wordCells.has(key);
+                const isRemoved = removed.has(key);
+                const isWrong = isRemoved && isWordCell;
+                return (
+                  <GridCell
+                    key={c}
+                    letter={cell.letter}
+                    removed={isRemoved}
+                    wrong={isWrong}
+                    onClick={() => cell.letter !== null && toggle(r, c)}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
 
         {solved && (
-          <p className="mt-4 text-center text-green-600 font-semibold text-sm">
-            Puzzle solved!
-          </p>
+          <div className="mt-4 rounded-lg overflow-hidden relative">
+            <img src="/images/win-signal.png" alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="relative z-10 py-6 px-4 text-center bg-black/40">
+              <p className="text-white font-bold text-lg tracking-widest font-mono">SIGNAL FOUND</p>
+              <p className="text-gray-300 text-xs font-mono mt-1">puzzle complete</p>
+            </div>
+          </div>
         )}
         {failed && (
-          <p className="mt-4 text-center text-red-500 font-semibold text-sm">
+          <p className="mt-4 text-center text-red-400 font-semibold text-sm font-mono">
             Too many mistakes — puzzle failed.
           </p>
         )}

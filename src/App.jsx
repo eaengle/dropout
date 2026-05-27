@@ -39,11 +39,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start px-4 py-12">
+    <div
+      className="min-h-screen flex flex-col items-center justify-start px-4 py-12 bg-gray-950"
+      style={{ backgroundImage: 'url(/images/bg-game.png)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}
+    >
       <div className="max-w-2xl mx-auto w-full">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-indigo-900 tracking-tight">Dropout</h1>
-          <p className="text-xs text-indigo-300 font-mono mb-3">remove the noise. find the signal.</p>
+        <div className="mb-8 rounded-xl overflow-hidden relative">
+          <img src="/images/bg-hero.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-80" />
+          <div className="relative z-10 p-6 bg-black/50">
+            <h1 className="text-4xl font-bold text-green-400 tracking-tight font-mono">Dropout</h1>
+            <p className="text-xs text-green-300/70 font-mono">remove the noise. find the signal.</p>
+          </div>
         </div>
 
         <form onSubmit={handleGenerate} className="flex flex-col gap-4 mb-8">
@@ -53,13 +59,13 @@ export default function App() {
               value={theme}
               onChange={e => setTheme(e.target.value)}
               placeholder="Theme… ocean, space, cooking (leave blank for random)"
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-sm"
+              className="flex-1 px-4 py-2 rounded-lg border border-gray-700 bg-gray-900/70 text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="px-5 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? 'Generating…' : 'Generate'}
             </button>
@@ -78,9 +84,9 @@ export default function App() {
                 value={wordCount}
                 onChange={e => setWordCount(Number(e.target.value))}
                 disabled={loading}
-                className="w-28 accent-indigo-600"
+                className="w-28 accent-indigo-500"
               />
-              <span className="text-sm font-mono text-indigo-900 w-4">{wordCount}</span>
+              <span className="text-sm font-mono text-indigo-300 w-4">{wordCount}</span>
             </div>
 
             {/* Difficulty */}
@@ -99,7 +105,7 @@ export default function App() {
                     'px-3 py-1 rounded-full text-xs font-semibold border transition-colors',
                     difficulty === level
                       ? 'bg-indigo-600 border-indigo-600 text-white'
-                      : 'bg-white border-gray-200 text-gray-500 hover:border-indigo-300 hover:text-indigo-600',
+                      : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-indigo-500 hover:text-indigo-300',
                   ].join(' ')}
                 >
                   {label}
@@ -109,14 +115,14 @@ export default function App() {
           </div>
 
           {difficulty >= 1 && (
-            <p className="text-xs text-gray-400 italic">
+            <p className="text-xs text-gray-500 italic">
               {DIFFICULTY_LABELS[difficulty - 1].desc} — {6 - difficulty} wrong click{6 - difficulty !== 1 ? 's' : ''} allowed
             </p>
           )}
         </form>
 
         {error && (
-          <p className="text-red-500 text-sm mb-6">{error}</p>
+          <p className="text-red-400 text-sm mb-6">{error}</p>
         )}
 
         {puzzle && <GameBoard puzzle={puzzle} />}
